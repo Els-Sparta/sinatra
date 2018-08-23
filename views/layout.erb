@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title><%= @title %></title>
+  </head>
+  <body>
+    <%= erb(:"partials/navigation", :layout => false) %>
+    <!-- grabs the correct file to fill the rest of the layout by understanding what is written in the browser  -->
+    <%= yield %>
+  </body>
+</html>
+
+
+<!-- Layout will always be the first thing called when generating webpages  -->
