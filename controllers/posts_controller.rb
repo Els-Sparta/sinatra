@@ -31,30 +31,28 @@ class PostsController < Sinatra::Base
       post_body: 'This is the third post'
     }]
 
-
+  # root
   get "/" do
     @title = "Blog Post"
-    @posts = $posts
+    @posts = Post.all
     erb :'posts/index'
+
   end
 
   get "/new" do
-    @post = {
-      id: "",
-      title: "",
-      post_body: ""
-    }
+    @title = "New Post"
+    @post = Post.new
+
     erb :'posts/new'
   end
 
   post "/" do
-    new_post = {
-      id: $posts.length,
-      title: params[:title],
-      post_body: params[:post_body]
-    }
+    post = Post.new
 
-    $posts.push(new_post)
+    post.title = params[:title]
+    post.post_body = params[:post_body]
+
+    post.save
 
     redirect "/"
   end
@@ -63,7 +61,7 @@ class PostsController < Sinatra::Base
     # stored in params
     id = params[:id].to_i
 
-    @post = $posts[id]
+    @post = Post.find(id)
     erb :'posts/show'
   end
 
@@ -72,7 +70,7 @@ class PostsController < Sinatra::Base
     @title = "Edit Post"
     id = params[:id].to_i
 
-    @post = $posts[id]
+    @post = Post.find(id)
 
     erb :'posts/edit'
   end
@@ -80,19 +78,22 @@ class PostsController < Sinatra::Base
   put "/:id" do
     id = params[:id].to_i
 
-    post = $posts[id]
+    post = Post.find(id)
 
-    post[:title] = params[:title]
-    post[:post_body] = params[:post_body]
+    post.title = params[:title]
+    post.post_body = params[:post_body]
 
-    $posts[id] = post
+    post.save
 
     redirect "/"
   end
 
   delete "/:id" do
     id = params[:id].to_i
-    $posts.delete_at(id)
+
+    Post.destroy(id)
+
+
 
     redirect '/'
   end
